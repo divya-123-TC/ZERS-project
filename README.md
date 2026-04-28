@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ZERS — Zero-Device Emergency Response System
 
 A full-stack AI-powered emergency response prototype.
@@ -179,3 +180,6 @@ to:
 ```python
 DB_PATH = "zers.db"
 ```
+=======
+# ZERS-project
+>>>>>>> afb6c21eca29cbd817a2682dd311d0f84987e29b
