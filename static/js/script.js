@@ -26,7 +26,7 @@ let voiceTranscript = '';
 let isRecording = false;
 let recognition = null;
 let demoMode = false;
-window.initGoogleMap = null;
+
 // ─── SAFE ZONES — hardcoded destinations ──────────────────────────────────────
 const SAFE_ZONES = {
   hospital:    { name: 'City Hospital',     lat: 12.9800, lng: 77.5900, icon: '🏥' },
