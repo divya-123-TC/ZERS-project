@@ -225,10 +225,24 @@ def get_stats():
         by_type = db.execute("SELECT emergency_type, COUNT(*) as cnt FROM alerts GROUP BY emergency_type").fetchall()
     return jsonify({"total": total, "high": high, "active": active, "by_type": [dict(r) for r in by_type]})
 
+
+import os
+
 if __name__ == "__main__":
     # Initialize DB on startup
     get_db()
-    print("🚨 ZERS Backend running on http://localhost:5000")
+
+    print("🚨 ZERS Backend running...")
     print("   Main UI: http://localhost:5000")
     print("   Rescue Dashboard: http://localhost:5000/rescue")
-    app.run(debug=True, port=5000)
+
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 10000)),
+        debug=True
+    )
+
+
+
+
+
