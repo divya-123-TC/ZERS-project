@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZERS — Zero-Device Emergency Response System</title>
+<link rel="stylesheet" href="/static/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ─── DANGER BANNER (shown when user enters danger zone) ────────────────── -->
+<div class="danger-banner" id="dangerBanner" style="display:none">
+  <span class="danger-banner-icon">🚨</span>
+  <span class="danger-banner-text">YOU ARE IN A DANGER ZONE</span>
+  <span class="danger-banner-sub" id="dangerBannerSub">Emergency detected nearby — follow safe route</span>
+  <button class="danger-banner-close" onclick="this.parentElement.style.display='none'">✕</button>
+</div>
+
+<!-- ─── TOP NAV ────────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="logo-badge">⚡</div>
+    <div class="logo-text">
+      <span class="logo-main">ZERS</span>
+      <span class="logo-sub">Zero-Device Emergency Response</span>
+    </div>
+  </div>
+  <div class="topbar-center">
+    <div class="status-pill" id="networkStatus">
+      <span class="dot green"></span> MESH ONLINE
+    </div>
+    <div class="status-pill" id="modePill">
+      <span class="dot green"></span>
+      <span id="modeLabel">📱 USER MODE</span>
+    </div>
+    <div class="status-pill">
+      <span class="dot yellow"></span> SOLAR BACKUP
+    </div>
+    <div class="status-pill">
+      <span class="dot green"></span> DATA SECURED
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="safety-badge" id="safetyBadge">
+      <span class="safety-icon">✓</span>
+      <span class="safety-text">SAFE</span>
+    </div>
+    <a href="/rescue" class="rescue-btn">🧑‍🚒 Rescue Dashboard</a>
+  </div>
+</header>
+
+<!-- ─── MAIN LAYOUT ───────────────────────────────────────────────────────── -->
+<main class="app-grid">
+
+  <!-- ── LEFT PANEL ─────────────────────────────────────────────────────── -->
+  <aside class="panel panel-left">
+
+    <!-- Sensor Simulation -->
+    <section class="card" id="sensorCard">
+      <h3 class="card-title"><span class="icon">📡</span> Live Sensors</h3>
+      <div class="sensor-grid">
+        <div class="sensor-item">
+          <div class="sensor-label">Temperature</div>
+          <div class="sensor-val" id="s-temp">—°C</div>
+          <div class="sensor-bar"><div class="sensor-fill red" id="b-temp" style="width:0%"></div></div>
+        </div>
+        <div class="sensor-item">
+          <div class="sensor-label">Smoke</div>
+          <div class="sensor-val" id="s-smoke">—ppm</div>
+          <div class="sensor-bar"><div class="sensor-fill orange" id="b-smoke" style="width:0%"></div></div>
+        </div>
+        <div class="sensor-item">
+          <div class="sensor-label">Water Level</div>
+          <div class="sensor-val" id="s-water">—cm</div>
+          <div class="sensor-bar"><div class="sensor-fill blue" id="b-water" style="width:0%"></div></div>
+        </div>
+        <div class="sensor-item">
+          <div class="sensor-label">Sound (dB)</div>
+          <div class="sensor-val" id="s-sound">—dB</div>
+          <div class="sensor-bar"><div class="sensor-fill purple" id="b-sound" style="width:0%"></div></div>
+        </div>
+      </div>
+      <button class="btn-secondary full-w" id="triggerSensorBtn">▶ Simulate Sensor Spike</button>
+    </section>
+
+    <!-- SOS + SOS Pole Mode -->
+    <section class="card sos-card">
+      <h3 class="card-title"><span class="icon">🚨</span> Emergency Alert</h3>
+      <p class="sos-hint">Hold SOS 1.5s • Or activate SOS Pole for zero-device</p>
+      <div class="sos-row">
+        <button class="sos-btn" id="sosBtn">SOS</button>
+        <button class="pole-btn" id="poleBtn">
+          <div class="pole-btn-icon">📡</div>
+          <div class="pole-btn-label">SOS POLE<br><span>ZERO-DEVICE</span></div>
+        </button>
+      </div>
+      <div class="pole-status" id="poleStatus" style="display:none">
+        <span class="pole-status-dot"></span>
+        <span id="poleStatusText">📡 MODE: ZERO-DEVICE (SOS POLE) — Fixed location active</span>
+      </div>
+    </section>
+
+    <!-- Voice Input -->
+    <section class="card" id="voiceCard">
+      <h3 class="card-title"><span class="icon">🎤</span> Voice Message</h3>
+      <div class="voice-status" id="voiceStatus">Press MIC to speak</div>
+      <div class="voice-transcript" id="voiceTranscript">Your message will appear here...</div>
+      <div class="voice-controls">
+        <button class="mic-btn" id="micBtn">🎙</button>
+        <button class="btn-primary" id="sendVoiceBtn" disabled>Send Message</button>
+      </div>
+    </section>
+
+    <!-- Context Guidance -->
+    <section class="card" id="guidanceCard">
+      <h3 class="card-title"><span class="icon">🧠</span> AI Guidance</h3>
+      <div class="guidance-box" id="guidanceBox">
+        <div class="guidance-type">MONITORING</div>
+        <div class="guidance-msg">All systems nominal. Sensors active.</div>
+        <div class="guidance-action">Stay alert. Help is always nearby.</div>
+      </div>
+    </section>
+
+  </aside>
+
+  <!-- ── CENTER: MAP ─────────────────────────────────────────────────────── -->
+  <div class="map-container">
+    <div id="map"></div>
+
+    <div class="map-legend">
+      <div class="legend-item"><span class="leg-dot" style="background:#FF3B30"></span>Fire</div>
+      <div class="legend-item"><span class="leg-dot" style="background:#007AFF"></span>Flood</div>
+      <div class="legend-item"><span class="leg-dot" style="background:#FFD60A"></span>SOS</div>
+      <div class="legend-item"><span class="leg-dot" style="background:#BF5AF2"></span>Earthquake</div>
+      <div class="legend-item"><span class="leg-dot" style="background:#30D158"></span>Safe Zone</div>
+    </div>
+
+  </div>
+
+  <!-- ── RIGHT PANEL ─────────────────────────────────────────────────────── -->
+  <aside class="panel panel-right">
+
+    <!-- Alert Feed -->
+    <section class="card">
+      <h3 class="card-title"><span class="icon">⚡</span> Live Alerts <span class="badge" id="alertCount">0</span></h3>
+      <div class="alert-feed" id="alertFeed">
+        <div class="empty-state">No alerts yet</div>
+      </div>
+    </section>
+
+    <!-- Auto Safe Route — no manual dropdown -->
+    <section class="card">
+      <h3 class="card-title"><span class="icon">🛣</span> Auto Safe Route</h3>
+      <div class="route-auto-info" id="routeAutoInfo">
+        AI will automatically route you to safety when an emergency is detected.
+      </div>
+      <div class="route-dest-display" id="routeDestDisplay" style="display:none">
+        <div class="route-dest-icon" id="routeDestIcon">🏥</div>
+        <div class="route-dest-details">
+          <div class="route-dest-name" id="routeDestName">—</div>
+          <div class="route-dest-reason" id="routeDestReason">—</div>
+        </div>
+      </div>
+      <div class="route-info" id="routeInfo">Waiting for emergency detection…</div>
+      <button class="btn-secondary full-w" id="clearRouteBtn" style="margin-top:6px">✕ Clear Route</button>
+    </section>
+
+    <!-- Infra Status -->
+    <section class="card">
+      <h3 class="card-title"><span class="icon">📶</span> Infrastructure</h3>
+      <div class="infra-grid">
+        <div class="infra-item online">
+          <div class="infra-dot"></div>
+          <div class="infra-label">Mesh Node A</div>
+          <div class="infra-status">ONLINE</div>
+        </div>
+        <div class="infra-item online">
+          <div class="infra-dot"></div>
+          <div class="infra-label">Mesh Node B</div>
+          <div class="infra-status">ONLINE</div>
+        </div>
+        <div class="infra-item offline" id="nodeC">
+          <div class="infra-dot"></div>
+          <div class="infra-label">Mesh Node C</div>
+          <div class="infra-status">OFFLINE</div>
+        </div>
+        <div class="infra-item online">
+          <div class="infra-dot"></div>
+          <div class="infra-label">Power Backup</div>
+          <div class="infra-status">SOLAR</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Limitations -->
+    <section class="card limitations-card">
+      <h3 class="card-title"><span class="icon">⚠️</span> System Limitations</h3>
+      <ul class="limitations-list">
+        <li>AI classification requires internet</li>
+        <li>Routing is simplified in demo mode</li>
+        <li>Sensor data is simulated</li>
+        <li>No personal identity stored</li>
+      </ul>
+    </section>
+
+  </aside>
+
+</main>
+
+<!-- ─── TOAST ──────────────────────────────────────────────────────────────── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1LE1WmWBIDp2eQ_6IoQaHuJ7hZpYwB74&libraries=geometry&callback=initGoogleMap" async defer></script>
+<script src="/static/js/script.js"></script>
+</body>
+</html>

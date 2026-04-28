@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZERS — Rescue Team Dashboard</title>
+<link rel="stylesheet" href="/static/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="rescue-body">
+
+<header class="topbar rescue-topbar">
+  <div class="topbar-left">
+    <div class="logo-badge red">🧑‍🚒</div>
+    <div class="logo-text">
+      <span class="logo-main">ZERS <span style="color:#FF3B30">RESCUE</span></span>
+      <span class="logo-sub">Emergency Command Center</span>
+    </div>
+  </div>
+  <div class="topbar-center">
+    <div class="stat-pill">Total: <strong id="statTotal">0</strong></div>
+    <div class="stat-pill red">HIGH: <strong id="statHigh">0</strong></div>
+    <div class="stat-pill yellow">Active: <strong id="statActive">0</strong></div>
+  </div>
+  <div class="topbar-right">
+    <div class="status-pill"><span class="dot green"></span> COMMAND ACTIVE</div>
+    <a href="/" class="rescue-btn">← User View</a>
+  </div>
+</header>
+
+<main class="rescue-grid">
+
+  <!-- ALERTS TABLE -->
+  <section class="rescue-panel">
+    <div class="rescue-panel-header">
+      <h2>📋 All Incidents</h2>
+      <div class="filter-bar">
+        <select id="filterType" class="select-input sm">
+          <option value="">All Types</option>
+          <option>FIRE</option><option>FLOOD</option>
+          <option>EARTHQUAKE</option><option>DISTRESS</option><option>NORMAL</option>
+        </select>
+        <select id="filterSeverity" class="select-input sm">
+          <option value="">All Severity</option>
+          <option>HIGH</option><option>MEDIUM</option><option>LOW</option>
+        </select>
+        <select id="filterStatus" class="select-input sm">
+          <option value="">All Status</option>
+          <option>Assigned</option><option>En Route</option><option>Completed</option>
+        </select>
+        <button class="btn-secondary sm" id="refreshBtn">⟳ Refresh</button>
+      </div>
+    </div>
+    <div class="alerts-table-wrap">
+      <table class="alerts-table" id="alertsTable">
+        <thead>
+          <tr>
+            <th>#</th><th>Type</th><th>Severity</th><th>Source</th>
+            <th>Message</th><th>Time</th><th>Status</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="alertsBody">
+          <tr><td colspan="8" class="empty-row">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- RIGHT SIDE -->
+  <div class="rescue-right">
+
+    <!-- Incident Detail -->
+    <section class="card" id="detailPanel">
+      <h3 class="card-title"><span class="icon">🔍</span> Incident Detail</h3>
+      <div id="detailContent" class="detail-placeholder">
+        Click an incident row to view details
+      </div>
+    </section>
+
+    <!-- AI Insights -->
+    <section class="card">
+      <h3 class="card-title"><span class="icon">🧠</span> AI Insights</h3>
+      <div id="aiInsights" class="ai-insights-placeholder">
+        Select an incident to view AI analysis
+      </div>
+    </section>
+
+    <!-- Voice Messages -->
+    <section class="card">
+      <h3 class="card-title"><span class="icon">🎤</span> Voice / Text Messages</h3>
+      <div class="msg-feed" id="msgFeed">
+        <div class="empty-state">No messages yet</div>
+      </div>
+    </section>
+
+    <!-- Incident History Chart -->
+    <section class="card">
+      <h3 class="card-title"><span class="icon">📊</span> Incident Breakdown</h3>
+      <div class="chart-area" id="chartArea">
+        <div class="empty-state">No data yet</div>
+      </div>
+    </section>
+
+  </div>
+
+</main>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="/static/js/rescue.js"></script>
+</body>
+</html>
